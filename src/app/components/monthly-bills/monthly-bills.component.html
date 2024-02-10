@@ -1,0 +1,47 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title> Bills Summary </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Bills Summary</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-item>
+    <ion-label>
+      <h1>Important</h1>
+    </ion-label>
+  </ion-item>
+  <ion-list [inset]="true">
+    <ion-item *ngFor="let item of importantBills">
+      <ion-label>{{ item.name }}</ion-label>
+      <ion-label>{{ item.value | currency: 'USD' }}</ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-item>
+    <ion-label>
+      <h1>Credit Cards</h1>
+    </ion-label>
+  </ion-item>
+  <ion-list [inset]="true">
+    <ion-item *ngFor="let item of creditCards">
+      <ion-label>{{ item.name }}</ion-label>
+      <ion-label>{{ item.value | currency: 'USD' }}</ion-label>
+    </ion-item>
+  </ion-list>
+  <ion-item>
+    <ion-label>
+      <h1>Subscriptions</h1>
+    </ion-label>
+  </ion-item>
+  <ion-list [inset]="true">
+    <ion-item *ngFor="let item of subscriptions">
+      <ion-label>{{ item.name }}</ion-label>
+      <ion-label>{{ item.value | currency: 'USD' }}</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

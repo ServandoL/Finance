@@ -7,30 +7,32 @@ export const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: 'tab1',
-        loadComponent: () =>
-          import('../tab1/tab1.page').then((m) => m.Tab1Page),
+        path: 'summary',
+        loadComponent: () => import('../account-summary/tab1.page').then((m) => m.Tab1Page),
       },
       {
-        path: 'tab2',
-        loadComponent: () =>
-          import('../tab2/tab2.page').then((m) => m.Tab2Page),
+        path: 'credit-card-tracker',
+        loadComponent: () => import('../credit-card-tracker/tab2.page').then((m) => m.Tab2Page),
       },
       {
-        path: 'tab3',
+        path: 'budget-overview',
+        loadComponent: () => import('../budget-overview/tab3.page').then((m) => m.Tab3Page),
+      },
+      {
+        path: 'monthly-bills',
         loadComponent: () =>
-          import('../tab3/tab3.page').then((m) => m.Tab3Page),
+          import('../components/monthly-bills/monthly-bills.component').then((m) => m.MonthlyBillsComponent),
       },
       {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/tabs/summary',
         pathMatch: 'full',
       },
     ],
   },
   {
     path: '',
-    redirectTo: '/tabs/tab1',
+    redirectTo: '/tabs/summary',
     pathMatch: 'full',
   },
 ];
