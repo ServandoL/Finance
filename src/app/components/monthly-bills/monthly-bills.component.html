@@ -17,7 +17,7 @@
     </ion-label>
   </ion-item>
   <ion-list [inset]="true">
-    <ion-item *ngFor="let item of importantBills">
+    <ion-item *ngFor="let item of importantBills$ | async">
       <ion-label>{{ item.name }}</ion-label>
       <ion-label>{{ item.value | currency: 'USD' }}</ion-label>
     </ion-item>
@@ -28,7 +28,7 @@
     </ion-label>
   </ion-item>
   <ion-list [inset]="true">
-    <ion-item *ngFor="let item of creditCards">
+    <ion-item *ngFor="let item of creditCards$ | async">
       <ion-label>{{ item.name }}</ion-label>
       <ion-label>{{ item.value | currency: 'USD' }}</ion-label>
     </ion-item>
@@ -39,7 +39,7 @@
     </ion-label>
   </ion-item>
   <ion-list [inset]="true">
-    <ion-item *ngFor="let item of subscriptions">
+    <ion-item *ngFor="let item of subscriptions$ | async">
       <ion-label>{{ item.name }}</ion-label>
       <ion-label>{{ item.value | currency: 'USD' }}</ion-label>
     </ion-item>

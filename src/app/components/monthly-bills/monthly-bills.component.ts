@@ -12,7 +12,9 @@ import {
   IonRow,
   IonCol,
 } from '@ionic/angular/standalone';
-import { BillSummary } from 'src/interfaces/BillSummary';
+import { Observable } from 'rxjs';
+import { BillSummary } from 'src/app/interfaces/BillSummary';
+import { MockServiceService } from 'src/app/services/mock.service';
 
 @Component({
   selector: 'app-monthly-bills',
@@ -20,77 +22,19 @@ import { BillSummary } from 'src/interfaces/BillSummary';
   styleUrls: ['./monthly-bills.component.scss'],
   standalone: true,
   imports: [IonLabel, IonItem, IonList, IonHeader, IonToolbar, IonTitle, IonContent, CommonModule],
+  providers: [MockServiceService],
 })
 export class MonthlyBillsComponent {
-  importantBills: BillSummary[] = [
-    {
-      name: 'Rent',
-      value: 100,
-    },
-    {
-      name: 'Electric',
-      value: 100,
-    },
-    {
-      name: 'Car Insurance',
-      value: 100,
-    },
-    {
-      name: 'Grocery',
-      value: 100,
-    },
-    {
-      name: 'NTTA',
-      value: 100,
-    },
-    {
-      name: 'Internet',
-      value: 100,
-    },
-    {
-      name: 'Phones',
-      value: 100,
-    },
-  ];
-  creditCards: BillSummary[] = [
-    {
-      name: 'Amazon CC',
-      value: 200,
-    },
-    {
-      name: 'Servando CC',
-      value: 200,
-    },
-    {
-      name: 'Servando Apple CC',
-      value: 200,
-    },
-    {
-      name: 'Katie CC',
-      value: 200,
-    },
-    {
-      name: 'Katie Apple CC',
-      value: 200,
-    },
-    {
-      name: 'Target CC',
-      value: 200,
-    },
-  ];
-  subscriptions: BillSummary[] = [
-    {
-      name: 'Hulu',
-      value: 100,
-    },
-    {
-      name: 'AppleOne',
-      value: 100,
-    },
-    {
-      name: 'Walmart Plus',
-      value: 100,
-    },
-  ];
-  constructor() {}
+  importantBills$: Observable<BillSummary[]>;
+  creditCards$: Observable<BillSummary[]>;
+  subscriptions$: Observable<BillSummary[]>;
+  constructor(private mock: MockServiceService) {
+    this.importantBills$ = mock.GetBillSummary();
+    this.creditCards$ = mock.GetBillSummary();
+    this.subscriptions$ = mock.GetBillSummary();
+  }
+
+  changeValue(item: BillSummary, value: number) {
+    item.value = value;
+  }
 }
