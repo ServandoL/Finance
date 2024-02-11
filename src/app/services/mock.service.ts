@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BillSummary } from 'src/app/interfaces/BillSummary';
+import { BillSummary, ISubmitRequest } from 'src/app/interfaces/BillSummary';
 import { faker } from '@faker-js/faker';
 import { Observable, delay, of } from 'rxjs';
 import { AccountSummary } from '../interfaces';
@@ -9,6 +9,11 @@ import { AccountSummary } from '../interfaces';
 })
 export class MockServiceService {
   constructor() {}
+
+  SubmitBillSummary(payload: ISubmitRequest[]): Observable<BillSummary[]> {
+    console.log('Submitted', payload);
+    return this.GetBillSummary();
+  }
 
   GetAccountSummary(): Observable<AccountSummary[]> {
     const total: AccountSummary = {
@@ -50,6 +55,7 @@ export class MockServiceService {
       value: +faker.finance.amount({ min: 100, max: 500, dec: 2 }),
       category,
       clicked: false,
+      edittedValue: null,
     };
     return out;
   }

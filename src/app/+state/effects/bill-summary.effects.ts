@@ -15,13 +15,25 @@ export class BillSummaryEffects {
 
   getBillSummary$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(BillSummaryActions.getData),
+      ofType(BillSummaryActions.getData, BillSummaryActions.submitDataSuccess),
       switchMap(() =>
         this.mock.GetBillSummary().pipe(
           map((payload) => BillSummaryActions.getDataSuccess({ payload })),
           catchError((error) => of(BillSummaryActions.getDataFailure({ error: (error as Error).message }))),
         ),
       ),
+    ),
+  );
+
+  submitBillSummary$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BillSummaryActions.submitData),
+      switchMap((action) =>
+        this.mock
+          .SubmitBillSummary(action.payload)
+          .pipe(map((payload) => BillSummaryActions.submitDataSuccess({ payload }))),
+      ),
+      catchError((error) => of(BillSummaryActions.submitDataFailure({ error: (error as Error).message }))),
     ),
   );
 }

@@ -1,0 +1,12 @@
+.button-list {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  .disabled {
+    color: gray;
+  }
+}
+
+ion-input {
+  color: green;
+}

@@ -16,7 +16,7 @@ export const billSummaryFeature = createFeature({
   name: 'billSummary',
   reducer: createReducer(
     initialState,
-    on(BillSummaryActions.getData, (state) => {
+    on(BillSummaryActions.getData, BillSummaryActions.submitDataSuccess, (state) => {
       return {
         ...state,
         isLoading: true,
@@ -28,9 +28,9 @@ export const billSummaryFeature = createFeature({
         const key = bill.category;
         const exist = map.get(key);
         if (!exist) {
-          map.set(key, [bill]);
+          map.set(key, [{ ...bill, clicked: false, edittedValue: null }]);
         } else {
-          map.set(key, [...exist, bill]);
+          map.set(key, [...exist, { ...bill, clicked: false, edittedValue: null }]);
         }
       });
       return {
@@ -41,6 +41,20 @@ export const billSummaryFeature = createFeature({
     }),
     on(BillSummaryActions.getDataFailure, (state, action) => {
       return {
+        bills: new Map(),
+        isLoading: false,
+        error: action.error,
+      };
+    }),
+    on(BillSummaryActions.submitData, (state, action) => {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }),
+    on(BillSummaryActions.submitDataFailure, (state, action) => {
+      return {
+        ...state,
         bills: new Map(),
         isLoading: false,
         error: action.error,

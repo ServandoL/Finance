@@ -16,16 +16,54 @@
     spinner="circles"></ion-loading>
 
   <div *ngFor="let item of bills$ | async | keyvalue">
-    <ion-item>
-      <ion-label>
-        <h1>{{ item.key }}</h1>
-      </ion-label>
-    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item>
+            <ion-label>
+              <h1>{{ item.key }}</h1>
+            </ion-label>
+            <div class="button-list">
+              <ion-button
+                fill="clear"
+                [disabled]="shouldDisable(item.key)"
+                (click)="handleSubmit()">
+                <ion-icon
+                  name="checkmark-outline"
+                  size="small"></ion-icon
+              ></ion-button>
+              <ion-button fill="clear">
+                <ion-icon
+                  name="add"
+                  size="small"></ion-icon></ion-button
+              ><ion-button fill="clear"
+                ><ion-icon
+                  name="trash-outline"
+                  size="small"></ion-icon
+              ></ion-button></div></ion-item
+        ></ion-col>
+      </ion-row>
+    </ion-grid>
     <ion-list [inset]="true">
-      <ion-item *ngFor="let item of item.value">
-        <ion-label>{{ item.name }}</ion-label>
-        <ion-label>{{ item.value | currency: 'USD' }}</ion-label>
-      </ion-item>
+      <ion-grid>
+        <ion-row *ngFor="let item of item.value">
+          <ion-col>
+            <ion-item>
+              <ion-label>{{ item.name }}</ion-label>
+              <div>
+                <ion-label
+                  (click)="handleClick(item)"
+                  *ngIf="item.clicked === false"
+                  >{{ item.value | currency: 'USD' }}</ion-label
+                >
+                <ion-input
+                  *ngIf="item.clicked === true"
+                  aria-label="Item Value"
+                  type="number"
+                  [placeholder]="item.value"
+                  (ionInput)="changeValue(item, $event)"></ion-input>
+              </div> </ion-item></ion-col></ion-row
+      ></ion-grid>
     </ion-list>
   </div>
 </ion-content>
