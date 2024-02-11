@@ -12,7 +12,7 @@
   </ion-header>
   <ion-loading
     [isOpen]="(isLoading$ | async) === true"
-    message="Fetching your data..."
+    [message]="loadingMessage$ | async"
     spinner="circles"></ion-loading>
 
   <div *ngFor="let item of bills$ | async | keyvalue">
@@ -49,24 +49,38 @@
     <ion-list [inset]="true">
       <ion-grid>
         <ion-row *ngFor="let item of item.value">
-          <ion-col>
-            <ion-item>
-              <ion-label>{{ item.name }}</ion-label>
-              <div>
-                <ion-label
-                  (click)="handleClick(item)"
-                  *ngIf="item.clicked === false"
-                  >{{ item.value | currency: 'USD' }}</ion-label
-                >
-                <ion-input
-                  class="update-item"
-                  *ngIf="item.clicked === true"
-                  aria-label="Item Value"
-                  type="number"
-                  [placeholder]="item.value"
-                  (ionInput)="changeValue(item, $event)"></ion-input>
-              </div> </ion-item></ion-col></ion-row
-      ></ion-grid>
+          <ion-item-sliding>
+            <ion-col>
+              <ion-item>
+                <ion-label>{{ item.name }}</ion-label>
+                <div>
+                  <ion-label
+                    (click)="handleClick(item)"
+                    *ngIf="item.clicked === false"
+                    >{{ item.value | currency: 'USD' }}</ion-label
+                  >
+                  <ion-input
+                    class="update-item"
+                    *ngIf="item.clicked === true"
+                    aria-label="Item Value"
+                    type="number"
+                    [placeholder]="item.value"
+                    (ionInput)="changeValue(item, $event)"></ion-input>
+                </div>
+              </ion-item>
+            </ion-col>
+
+            <ion-item-options side="end">
+              <ion-item-option
+                color="danger"
+                (click)="deleteItem(item)">
+                <ion-icon
+                  slot="icon-only"
+                  name="trash"></ion-icon>
+              </ion-item-option>
+            </ion-item-options> </ion-item-sliding
+        ></ion-row>
+      </ion-grid>
     </ion-list>
   </div>
   <ion-modal [isOpen]="(toggleModal$ | async) === true">

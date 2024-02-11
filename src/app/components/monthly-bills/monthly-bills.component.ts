@@ -21,6 +21,9 @@ import {
   IonIcon,
   IonModal,
   IonButtons,
+  IonItemSliding,
+  IonItemOptions,
+  IonItemOption,
 } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Observable, Subscription, map, take } from 'rxjs';
@@ -38,6 +41,9 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
   styleUrls: ['./monthly-bills.component.scss'],
   standalone: true,
   imports: [
+    IonItemOption,
+    IonItemOptions,
+    IonItemSliding,
     IonButtons,
     IonModal,
     IonIcon,
@@ -65,12 +71,15 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
   @ViewChild(IonModal) modal: IonModal | undefined;
   readonly subs: Subscription[] = [];
+  readonly PROCESS_MESSAGE = 'Processing your request...';
+  readonly FETCH_MESSAGE = 'Fetching your data...';
   bills$: Observable<Map<string, BillSummary[]>>;
   isLoading$: Observable<boolean>;
   updateForm: FormGroup<UpdateItemForm>;
   _categories = new BehaviorSubject<ICategory[]>([]);
   _toggleModal = new BehaviorSubject<boolean>(false);
   _categoryToAdd = new BehaviorSubject<string>('');
+  _loadingMessage = new BehaviorSubject<string>(this.FETCH_MESSAGE);
   constructor(
     private service: StateService,
     private store: Store<AppState>,
@@ -83,6 +92,10 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
       description: ['', Validators.required],
       value: [0, Validators.required],
     });
+  }
+
+  get loadingMessage$(): Observable<string> {
+    return this._loadingMessage.asObservable();
   }
 
   get categories$(): Observable<ICategory[]> {
@@ -112,6 +125,7 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
           };
           return out;
         });
+        this._loadingMessage.next(this.FETCH_MESSAGE);
         this._categories.next(categories);
       }),
     );
@@ -124,6 +138,11 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
 
   shouldDisable(category: string): boolean {
     return this._categories.value.find((cat) => cat.category === category)?.enable === false;
+  }
+
+  deleteItem(item: BillSummary) {
+    this._loadingMessage.next(this.PROCESS_MESSAGE);
+    this.service.DeleteBillSummaryItem(item);
   }
 
   handleAddItem() {
@@ -163,12 +182,14 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
   }
 
   confirmModal() {
+    this._loadingMessage.next(this.PROCESS_MESSAGE);
     this.handleAddItem();
     this.updateForm.reset();
     this._toggleModal.next(false);
   }
 
   handleSubmit() {
+    this._loadingMessage.next(this.PROCESS_MESSAGE);
     this.bills$
       .pipe(
         take(1),

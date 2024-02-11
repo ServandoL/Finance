@@ -10,6 +10,11 @@ import { AccountSummary } from '../interfaces';
 export class MockServiceService {
   constructor() {}
 
+  DeleteItem(payload: BillSummary): Observable<BillSummary[]> {
+    console.log('deleted', payload);
+    return this.GetBillSummary();
+  }
+
   SubmitBillSummary(payload: ISubmitRequest[]): Observable<BillSummary[]> {
     console.log('Submitted', payload);
     return this.GetBillSummary();

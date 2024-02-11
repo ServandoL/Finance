@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { BillSummaryActions } from '../+state/actions/bill-summary.actions';
 import { AppState } from '../+state';
 import { AccountSummaryActions } from '../+state/actions/account-summary.actions';
-import { ISubmitRequest } from '../interfaces';
+import { BillSummary, ISubmitRequest } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +19,9 @@ export class StateService {
   }
   SubmitBillSummary(payload: ISubmitRequest[]): void {
     this.store.dispatch(BillSummaryActions.submitData({ payload }));
+  }
+  DeleteBillSummaryItem(payload: BillSummary): void {
+    this.store.dispatch(BillSummaryActions.deleteItem({ payload }));
   }
 
   GetAccountSummary(): void {

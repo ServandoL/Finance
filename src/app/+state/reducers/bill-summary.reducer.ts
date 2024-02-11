@@ -16,12 +16,17 @@ export const billSummaryFeature = createFeature({
   name: 'billSummary',
   reducer: createReducer(
     initialState,
-    on(BillSummaryActions.getData, BillSummaryActions.submitDataSuccess, (state) => {
-      return {
-        ...state,
-        isLoading: true,
-      };
-    }),
+    on(
+      BillSummaryActions.getData,
+      BillSummaryActions.submitDataSuccess,
+      BillSummaryActions.deleteItemSuccess,
+      (state) => {
+        return {
+          ...state,
+          isLoading: true,
+        };
+      },
+    ),
     on(BillSummaryActions.getDataSuccess, (state, action) => {
       const map = new Map<string, BillSummary[]>();
       action.payload.forEach((bill) => {
@@ -62,6 +67,20 @@ export const billSummaryFeature = createFeature({
     }),
     on(BillSummaryActions.resetData, () => {
       return initialState;
+    }),
+    on(BillSummaryActions.deleteItem, (state) => {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }),
+    on(BillSummaryActions.deleteItemFailure, (state, action) => {
+      return {
+        ...state,
+        bills: new Map(),
+        isLoading: false,
+        error: action.error,
+      };
     }),
   ),
 });

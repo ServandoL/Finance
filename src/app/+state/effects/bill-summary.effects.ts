@@ -15,7 +15,7 @@ export class BillSummaryEffects {
 
   getBillSummary$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(BillSummaryActions.getData, BillSummaryActions.submitDataSuccess),
+      ofType(BillSummaryActions.getData, BillSummaryActions.submitDataSuccess, BillSummaryActions.deleteItemSuccess),
       switchMap(() =>
         this.mock.GetBillSummary().pipe(
           map((payload) => BillSummaryActions.getDataSuccess({ payload })),
@@ -34,6 +34,18 @@ export class BillSummaryEffects {
           .pipe(map((payload) => BillSummaryActions.submitDataSuccess({ payload }))),
       ),
       catchError((error) => of(BillSummaryActions.submitDataFailure({ error: (error as Error).message }))),
+    ),
+  );
+
+  deleteBillSummaryItem$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BillSummaryActions.deleteItem),
+      switchMap((action) =>
+        this.mock.DeleteItem(action.payload).pipe(
+          map((payload) => BillSummaryActions.deleteItemSuccess({ payload })),
+          catchError((error) => of(BillSummaryActions.deleteItemFailure({ error: (error as Error).message }))),
+        ),
+      ),
     ),
   );
 }

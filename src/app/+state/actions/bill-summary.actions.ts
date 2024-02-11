@@ -16,5 +16,8 @@ export const BillSummaryActions = createActionGroup({
     'Submit Data': props<{ payload: ISubmitRequest[] }>(),
     'Submit Data Success': props<{ payload: BillSummary[] }>(),
     'Submit Data Failure': props<{ error: string }>(),
+    'Delete Item': props<{ payload: BillSummary }>(),
+    'Delete Item Success': props<{ payload: BillSummary[] }>(),
+    'Delete Item Failure': props<{ error: string }>(),
   },
 });
