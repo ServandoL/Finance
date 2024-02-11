@@ -20,7 +20,8 @@
     "module": "es2020",
     "lib": ["es2018", "dom"],
     "useDefineForClassFields": false,
-    "strictFunctionTypes": true
+    "strictFunctionTypes": true,
+    "noUnusedLocals": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

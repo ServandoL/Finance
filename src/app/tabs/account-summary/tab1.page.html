@@ -1,8 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Account Summary
-    </ion-title>
+    <ion-title> Account Summary </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -12,5 +10,10 @@
       <ion-title size="large">Account Summary</ion-title>
     </ion-toolbar>
   </ion-header>
-  <app-account-info></app-account-info>
+
+  <ion-loading
+    [isOpen]="(isLoading$ | async) === true"
+    message="Fetching your data..."
+    spinner="circles"></ion-loading>
+  <app-account-info [summary]="(summary$|async) ?? []"></app-account-info>
 </ion-content>

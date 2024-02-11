@@ -10,38 +10,22 @@
       <ion-title size="large">Bills Summary</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-loading
+    [isOpen]="(isLoading$ | async) === true"
+    message="Fetching your data..."
+    spinner="circles"></ion-loading>
 
-  <ion-item>
-    <ion-label>
-      <h1>Important</h1>
-    </ion-label>
-  </ion-item>
-  <ion-list [inset]="true">
-    <ion-item *ngFor="let item of importantBills$ | async">
-      <ion-label>{{ item.name }}</ion-label>
-      <ion-label>{{ item.value | currency: 'USD' }}</ion-label>
+  <div *ngFor="let item of bills$ | async | keyvalue">
+    <ion-item>
+      <ion-label>
+        <h1>{{ item.key }}</h1>
+      </ion-label>
     </ion-item>
-  </ion-list>
-  <ion-item>
-    <ion-label>
-      <h1>Credit Cards</h1>
-    </ion-label>
-  </ion-item>
-  <ion-list [inset]="true">
-    <ion-item *ngFor="let item of creditCards$ | async">
-      <ion-label>{{ item.name }}</ion-label>
-      <ion-label>{{ item.value | currency: 'USD' }}</ion-label>
-    </ion-item>
-  </ion-list>
-  <ion-item>
-    <ion-label>
-      <h1>Subscriptions</h1>
-    </ion-label>
-  </ion-item>
-  <ion-list [inset]="true">
-    <ion-item *ngFor="let item of subscriptions$ | async">
-      <ion-label>{{ item.name }}</ion-label>
-      <ion-label>{{ item.value | currency: 'USD' }}</ion-label>
-    </ion-item>
-  </ion-list>
+    <ion-list [inset]="true">
+      <ion-item *ngFor="let item of item.value">
+        <ion-label>{{ item.name }}</ion-label>
+        <ion-label>{{ item.value | currency: 'USD' }}</ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>

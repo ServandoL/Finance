@@ -1,21 +1,9 @@
-<ion-card>
-  <ion-card-header>
-    <ion-card-title>$6,032</ion-card-title>
-    <ion-card-subtitle>Account Total</ion-card-subtitle>
-  </ion-card-header>
-
-  <ion-card-content>
-    Updated on Feb 10, 2024.
-  </ion-card-content>
-</ion-card>
-
-<ion-card [routerLink]="['/tabs/monthly-bills']" routerLinkActive="router-link-active" >
-  <ion-card-header>
-    <ion-card-title>$2,032</ion-card-title>
-    <ion-card-subtitle>February Bill Estimate</ion-card-subtitle>
-  </ion-card-header>
-
-  <ion-card-content>
-    Updated on Feb 10, 2024.
-  </ion-card-content>
-</ion-card>
+<div *ngFor="let item of summary">
+  <ion-card [routerLink]="item.type === monthlyBudget ? ['/tabs/monthly-bills'] : []">
+    <ion-card-header>
+      <ion-card-title>{{ item.total | currency: 'USD' }}</ion-card-title>
+      <ion-card-subtitle>{{ item.type }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content> Updated on {{ item.updatedTms | date }} </ion-card-content></ion-card
+  >
+</div>

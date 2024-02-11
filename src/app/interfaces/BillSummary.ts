@@ -1,7 +1,8 @@
 export interface BillSummary {
   name: string;
   value: number;
-  clicked: boolean;
+  category: string;
+  clicked?: boolean;
 }
 
 export enum BillType {

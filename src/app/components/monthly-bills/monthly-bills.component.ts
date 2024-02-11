@@ -8,30 +8,54 @@ import {
   IonList,
   IonItem,
   IonLabel,
-  IonGrid,
-  IonRow,
-  IonCol,
+  IonButton,
+  IonLoading,
+  ViewWillEnter,
+  ViewWillLeave,
 } from '@ionic/angular/standalone';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { AppState } from 'src/app/+state';
+import { selectBills, selectIsLoading } from 'src/app/+state/reducers/bill-summary.reducer';
 import { BillSummary } from 'src/app/interfaces/BillSummary';
-import { MockServiceService } from 'src/app/services/mock.service';
+import { StateService } from 'src/app/services/state.service';
 
 @Component({
   selector: 'app-monthly-bills',
   templateUrl: './monthly-bills.component.html',
   styleUrls: ['./monthly-bills.component.scss'],
   standalone: true,
-  imports: [IonLabel, IonItem, IonList, IonHeader, IonToolbar, IonTitle, IonContent, CommonModule],
-  providers: [MockServiceService],
+  imports: [
+    IonLoading,
+    IonButton,
+    IonLabel,
+    IonItem,
+    IonList,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    CommonModule,
+  ],
+  providers: [StateService],
 })
-export class MonthlyBillsComponent {
-  importantBills$: Observable<BillSummary[]>;
-  creditCards$: Observable<BillSummary[]>;
-  subscriptions$: Observable<BillSummary[]>;
-  constructor(private mock: MockServiceService) {
-    this.importantBills$ = mock.GetBillSummary();
-    this.creditCards$ = mock.GetBillSummary();
-    this.subscriptions$ = mock.GetBillSummary();
+export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
+  bills$: Observable<Map<string, BillSummary[]>>;
+  isLoading$: Observable<boolean>;
+  constructor(
+    private service: StateService,
+    private store: Store<AppState>,
+  ) {
+    this.bills$ = this.store.select(selectBills);
+    this.isLoading$ = this.store.select(selectIsLoading);
+  }
+
+  ionViewWillEnter(): void {
+    this.service.GetBillSummary();
+  }
+
+  ionViewWillLeave(): void {
+    this.service.ResetBillSummary();
   }
 
   changeValue(item: BillSummary, value: number) {
