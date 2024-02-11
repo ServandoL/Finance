@@ -1,3 +1,5 @@
+import { FormControl } from '@angular/forms';
+
 export interface BillSummary {
   name: string;
   value: number;
@@ -20,4 +22,9 @@ export enum BillType {
   IMPORTANT,
   CREDIT_CARD,
   SUBSCRIPTION,
+}
+
+export interface UpdateItemForm {
+  description: FormControl<string>;
+  value: FormControl<number>;
 }

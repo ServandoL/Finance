@@ -32,7 +32,9 @@
                   name="checkmark-outline"
                   size="small"></ion-icon
               ></ion-button>
-              <ion-button fill="clear">
+              <ion-button
+                fill="clear"
+                (click)="openModal(item.key)">
                 <ion-icon
                   name="add"
                   size="small"></ion-icon></ion-button
@@ -57,6 +59,7 @@
                   >{{ item.value | currency: 'USD' }}</ion-label
                 >
                 <ion-input
+                  class="update-item"
                   *ngIf="item.clicked === true"
                   aria-label="Item Value"
                   type="number"
@@ -66,4 +69,43 @@
       ></ion-grid>
     </ion-list>
   </div>
+  <ion-modal [isOpen]="(toggleModal$ | async) === true">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancelModal()">Cancel</ion-button>
+          </ion-buttons>
+          <ion-title>Add item to {{ categoryToAdd$ | async }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button
+              (click)="confirmModal()"
+              [strong]="true"
+              >Confirm</ion-button
+            >
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <form [formGroup]="updateForm">
+          <ion-list>
+            <ion-item>
+              <ion-input
+                formControlName="description"
+                label="Description"
+                placeholder="Enter description"
+                type="text"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input
+                formControlName="value"
+                label="Amount"
+                placeholder="Enter amount"
+                type="number"></ion-input>
+            </ion-item>
+          </ion-list>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
 </ion-content>

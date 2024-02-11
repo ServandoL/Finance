@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import {
   IonHeader,
   IonToolbar,
@@ -19,15 +19,18 @@ import {
   IonFab,
   IonFabButton,
   IonIcon,
+  IonModal,
+  IonButtons,
 } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Observable, Subscription, map, take } from 'rxjs';
 import { AppState } from 'src/app/+state';
 import { selectBills, selectIsLoading } from 'src/app/+state/reducers/bill-summary.reducer';
-import { BillSummary, ICategory, ISubmitRequest } from 'src/app/interfaces/BillSummary';
+import { BillSummary, ICategory, ISubmitRequest, UpdateItemForm } from 'src/app/interfaces/BillSummary';
 import { StateService } from 'src/app/services/state.service';
 import * as IonicIcons from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-monthly-bills',
@@ -35,6 +38,8 @@ import { addIcons } from 'ionicons';
   styleUrls: ['./monthly-bills.component.scss'],
   standalone: true,
   imports: [
+    IonButtons,
+    IonModal,
     IonIcon,
     IonFabButton,
     IonFab,
@@ -52,25 +57,48 @@ import { addIcons } from 'ionicons';
     IonTitle,
     IonContent,
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [StateService],
 })
 export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
+  @ViewChild(IonModal) modal: IonModal | undefined;
   readonly subs: Subscription[] = [];
   bills$: Observable<Map<string, BillSummary[]>>;
   isLoading$: Observable<boolean>;
+  updateForm: FormGroup<UpdateItemForm>;
   _categories = new BehaviorSubject<ICategory[]>([]);
+  _toggleModal = new BehaviorSubject<boolean>(false);
+  _categoryToAdd = new BehaviorSubject<string>('');
   constructor(
     private service: StateService,
     private store: Store<AppState>,
+    private fb: FormBuilder,
   ) {
     addIcons(IonicIcons);
     this.bills$ = this.store.select(selectBills);
     this.isLoading$ = this.store.select(selectIsLoading);
+    this.updateForm = this.fb.nonNullable.group({
+      description: ['', Validators.required],
+      value: [0, Validators.required],
+    });
   }
 
   get categories$(): Observable<ICategory[]> {
     return this._categories.asObservable();
+  }
+
+  get toggleModal$(): Observable<boolean> {
+    return this._toggleModal.asObservable();
+  }
+
+  get categoryToAdd$(): Observable<string> {
+    return this._categoryToAdd.asObservable();
+  }
+
+  get form(): UpdateItemForm {
+    return this.updateForm.controls;
   }
 
   ionViewWillEnter(): void {
@@ -96,6 +124,48 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
 
   shouldDisable(category: string): boolean {
     return this._categories.value.find((cat) => cat.category === category)?.enable === false;
+  }
+
+  handleAddItem() {
+    this.bills$
+      .pipe(
+        take(1),
+        map((bills) => {
+          const cat = this._categoryToAdd.value;
+          const toUpdate: BillSummary[] = bills.get(cat) ?? [];
+          const update: BillSummary = {
+            name: this.form.description.value,
+            value: this.form.value.value,
+            category: cat,
+            clicked: false,
+            edittedValue: null,
+          };
+          toUpdate.push(update);
+          const request: ISubmitRequest = {
+            category: cat,
+            bills: toUpdate,
+          };
+          this.service.SubmitBillSummary([request]);
+        }),
+      )
+      .subscribe();
+  }
+
+  openModal(category: string) {
+    this._categoryToAdd.next(category);
+    this._toggleModal.next(true);
+  }
+
+  cancelModal() {
+    this.modal?.dismiss(null, 'cancel');
+    this.updateForm.reset();
+    this._toggleModal.next(false);
+  }
+
+  confirmModal() {
+    this.handleAddItem();
+    this.updateForm.reset();
+    this._toggleModal.next(false);
   }
 
   handleSubmit() {
