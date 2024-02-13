@@ -20,6 +20,7 @@ export const billSummaryFeature = createFeature({
       BillSummaryActions.getData,
       BillSummaryActions.submitDataSuccess,
       BillSummaryActions.deleteItemSuccess,
+      BillSummaryActions.deleteCategorySuccess,
       (state) => {
         return {
           ...state,
@@ -69,6 +70,20 @@ export const billSummaryFeature = createFeature({
       return initialState;
     }),
     on(BillSummaryActions.deleteItem, (state) => {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }),
+    on(BillSummaryActions.deleteItemFailure, (state, action) => {
+      return {
+        ...state,
+        bills: new Map(),
+        isLoading: false,
+        error: action.error,
+      };
+    }),
+    on(BillSummaryActions.deleteCategory, (state, action) => {
       return {
         ...state,
         isLoading: true,

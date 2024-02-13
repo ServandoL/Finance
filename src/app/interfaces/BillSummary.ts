@@ -28,3 +28,14 @@ export interface UpdateItemForm {
   description: FormControl<string>;
   value: FormControl<number>;
 }
+
+export interface DeleteAction {
+  detail: { data: { action: ButtonActionType } };
+  role: 'cancel' | 'destructive' | 'selected' | string;
+}
+
+export enum ButtonActionType {
+  DELETE = 'delete',
+  CANCEL = 'cancel',
+  SHARE = 'share',
+}

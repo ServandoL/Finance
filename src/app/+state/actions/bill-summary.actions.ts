@@ -19,5 +19,8 @@ export const BillSummaryActions = createActionGroup({
     'Delete Item': props<{ payload: BillSummary }>(),
     'Delete Item Success': props<{ payload: BillSummary[] }>(),
     'Delete Item Failure': props<{ error: string }>(),
+    'Delete Category': props<{ payload: string }>(),
+    'Delete Category Success': props<{ payload: BillSummary[] }>(),
+    'Delete Category Failure': props<{ error: string }>(),
   },
 });

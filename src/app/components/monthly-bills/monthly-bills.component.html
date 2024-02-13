@@ -38,7 +38,9 @@
                 <ion-icon
                   name="add"
                   size="small"></ion-icon></ion-button
-              ><ion-button fill="clear"
+              ><ion-button
+                fill="clear"
+                (click)="handleDeleteCategory(item.key)"
                 ><ion-icon
                   name="trash-outline"
                   size="small"></ion-icon
@@ -83,6 +85,11 @@
       </ion-grid>
     </ion-list>
   </div>
+  <ion-action-sheet
+    [header]="'Really delete category: ' + (_categoryToDelete | async)"
+    [isOpen]="(toggleActionSheet$ | async) === true"
+    (didDismiss)="handleAction($event)"
+    [buttons]="actionSheetButtons"></ion-action-sheet>
   <ion-modal [isOpen]="(toggleModal$ | async) === true">
     <ng-template>
       <ion-header>

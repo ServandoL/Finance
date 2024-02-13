@@ -23,6 +23,9 @@ export class StateService {
   DeleteBillSummaryItem(payload: BillSummary): void {
     this.store.dispatch(BillSummaryActions.deleteItem({ payload }));
   }
+  DeleteBillSummaryCategory(payload: string): void {
+    this.store.dispatch(BillSummaryActions.deleteCategory({ payload }));
+  }
 
   GetAccountSummary(): void {
     this.store.dispatch(AccountSummaryActions.getData());

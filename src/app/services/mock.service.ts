@@ -10,6 +10,11 @@ import { AccountSummary } from '../interfaces';
 export class MockServiceService {
   constructor() {}
 
+  DeleteCategory(payload: string) {
+    console.log('deleted category', payload);
+    return this.GetBillSummary();
+  }
+
   DeleteItem(payload: BillSummary): Observable<BillSummary[]> {
     console.log('deleted', payload);
     return this.GetBillSummary();

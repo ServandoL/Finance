@@ -24,12 +24,20 @@ import {
   IonItemSliding,
   IonItemOptions,
   IonItemOption,
+  IonActionSheet,
 } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Observable, Subscription, map, take } from 'rxjs';
 import { AppState } from 'src/app/+state';
 import { selectBills, selectIsLoading } from 'src/app/+state/reducers/bill-summary.reducer';
-import { BillSummary, ICategory, ISubmitRequest, UpdateItemForm } from 'src/app/interfaces/BillSummary';
+import {
+  BillSummary,
+  ButtonActionType,
+  DeleteAction,
+  ICategory,
+  ISubmitRequest,
+  UpdateItemForm,
+} from 'src/app/interfaces/BillSummary';
 import { StateService } from 'src/app/services/state.service';
 import * as IonicIcons from 'ionicons/icons';
 import { addIcons } from 'ionicons';
@@ -41,6 +49,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
   styleUrls: ['./monthly-bills.component.scss'],
   standalone: true,
   imports: [
+    IonActionSheet,
     IonItemOption,
     IonItemOptions,
     IonItemSliding,
@@ -80,6 +89,25 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
   _toggleModal = new BehaviorSubject<boolean>(false);
   _categoryToAdd = new BehaviorSubject<string>('');
   _loadingMessage = new BehaviorSubject<string>(this.FETCH_MESSAGE);
+  _toggleActionSheet = new BehaviorSubject<boolean>(false);
+  _categoryToDelete = new BehaviorSubject<string>('');
+  public actionSheetButtons = [
+    {
+      text: 'Delete',
+      role: 'destructive',
+      data: {
+        action: 'delete',
+      },
+    },
+    {
+      text: 'Cancel',
+      role: 'cancel',
+      data: {
+        action: 'cancel',
+      },
+    },
+  ];
+
   constructor(
     private service: StateService,
     private store: Store<AppState>,
@@ -112,6 +140,10 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
 
   get form(): UpdateItemForm {
     return this.updateForm.controls;
+  }
+
+  get toggleActionSheet$(): Observable<boolean> {
+    return this._toggleActionSheet.asObservable();
   }
 
   ionViewWillEnter(): void {
@@ -186,6 +218,29 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
     this.handleAddItem();
     this.updateForm.reset();
     this._toggleModal.next(false);
+  }
+
+  handleDeleteCategory(category: string) {
+    this.toggleActionMenu();
+    this._categoryToDelete.next(category);
+  }
+
+  handleAction(event: CustomEvent) {
+    this.toggleActionMenu();
+    const action = (event as unknown as DeleteAction).detail.data.action;
+    switch (action) {
+      case ButtonActionType.DELETE:
+        this._loadingMessage.next(this.PROCESS_MESSAGE);
+        this.service.DeleteBillSummaryCategory(this._categoryToDelete.value);
+        break;
+      default:
+        throw new Error(`${action} is not supported yet.`);
+    }
+  }
+
+  toggleActionMenu() {
+    const currentValue = this._toggleActionSheet.value;
+    this._toggleActionSheet.next(!currentValue);
   }
 
   handleSubmit() {
