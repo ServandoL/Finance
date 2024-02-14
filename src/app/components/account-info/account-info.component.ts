@@ -12,7 +12,7 @@ import { AccountSummary } from 'src/app/interfaces';
   imports: [IonCardContent, IonCardSubtitle, IonCardTitle, IonCardHeader, IonCard, RouterModule, CommonModule],
 })
 export class AccountInfoComponent {
-  readonly monthlyBudget = 'Monthly Bill';
+  readonly monthlyBudget = 'Monthly Total';
   @Input() summary: AccountSummary[] = [];
 
   constructor() {}

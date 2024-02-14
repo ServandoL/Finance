@@ -3,11 +3,12 @@ import { BillSummary, ISubmitRequest } from 'src/app/interfaces/BillSummary';
 import { faker } from '@faker-js/faker';
 import { Observable, delay, of } from 'rxjs';
 import { AccountSummary } from '../interfaces';
+import { MongoService } from './service.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-export class MockServiceService {
+export class MockServiceService implements MongoService {
   constructor() {}
 
   DeleteCategory(payload: string) {

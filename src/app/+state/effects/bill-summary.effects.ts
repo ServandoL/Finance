@@ -3,6 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { BillSummaryActions } from '../actions/bill-summary.actions';
 import { catchError, map, of, switchMap } from 'rxjs';
 import { MockServiceService } from 'src/app/services/mock.service';
+import { DbService } from 'src/app/services/db.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,7 @@ export class BillSummaryEffects {
   constructor(
     private actions$: Actions,
     private mock: MockServiceService,
+    private db: DbService,
   ) {}
 
   getBillSummary$ = createEffect(() =>
@@ -22,7 +24,7 @@ export class BillSummaryEffects {
         BillSummaryActions.deleteCategorySuccess,
       ),
       switchMap(() =>
-        this.mock.GetBillSummary().pipe(
+        this.db.GetBillSummary().pipe(
           map((payload) => BillSummaryActions.getDataSuccess({ payload })),
           catchError((error) => of(BillSummaryActions.getDataFailure({ error: (error as Error).message }))),
         ),

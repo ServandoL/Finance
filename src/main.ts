@@ -12,6 +12,21 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { provideEffects } from '@ngrx/effects';
 import { BillSummaryEffects } from './app/+state/effects/bill-summary.effects';
 import { AccountSummaryEffects } from './app/+state/effects/account-summary.effects';
+import * as Realm from 'realm-web';
+import { provideHttpClient } from '@angular/common/http';
+
+const options: Realm.AppConfiguration = {
+  id: environment.id,
+};
+const realm = new Realm.App(options);
+const creds = Realm.Credentials.apiKey(environment.key);
+realm
+  .logIn(creds)
+  .then((user) => console.log(user.id))
+  .catch((err) => {
+    console.error('Failed to log in', err);
+  });
+export const mongo = realm.currentUser;
 
 // Call the element loader before the bootstrapModule/bootstrapApplication call
 defineCustomElements(window);
@@ -35,5 +50,6 @@ bootstrapApplication(AppComponent, {
       connectInZone: true, // If set to true, the connection is established within the Angular zone
     }),
     provideEffects(BillSummaryEffects, AccountSummaryEffects),
+    provideHttpClient(),
   ],
 });

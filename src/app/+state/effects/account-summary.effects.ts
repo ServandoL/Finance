@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { catchError, map, of, switchMap } from 'rxjs';
-import { MockServiceService } from 'src/app/services/mock.service';
 import { AccountSummaryActions } from '../actions/account-summary.actions';
+import { DbService } from 'src/app/services/db.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,14 +10,14 @@ import { AccountSummaryActions } from '../actions/account-summary.actions';
 export class AccountSummaryEffects {
   constructor(
     private actions$: Actions,
-    private mock: MockServiceService,
+    private db: DbService,
   ) {}
 
   getAccountSummary$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AccountSummaryActions.getData),
       switchMap(() =>
-        this.mock.GetAccountSummary().pipe(
+        this.db.GetAccountSummary().pipe(
           map((payload) => AccountSummaryActions.getDataSuccess({ payload })),
           catchError((error) => of(AccountSummaryActions.getDataFailure({ error: (error as Error).message }))),
         ),

@@ -18,10 +18,13 @@
     "importHelpers": true,
     "target": "es2022",
     "module": "es2020",
-    "lib": ["es2018", "dom"],
+    "lib": ["ES2020", "dom"],
     "useDefineForClassFields": false,
     "strictFunctionTypes": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "types": ["node"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
