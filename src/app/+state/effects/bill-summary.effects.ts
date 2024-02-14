@@ -22,6 +22,7 @@ export class BillSummaryEffects {
         BillSummaryActions.submitDataSuccess,
         BillSummaryActions.deleteItemSuccess,
         BillSummaryActions.deleteCategorySuccess,
+        BillSummaryActions.updateDataSuccess,
       ),
       switchMap(() =>
         this.db.GetBillSummary().pipe(
@@ -36,7 +37,7 @@ export class BillSummaryEffects {
     this.actions$.pipe(
       ofType(BillSummaryActions.submitData),
       switchMap((action) =>
-        this.mock
+        this.db
           .SubmitBillSummary(action.payload)
           .pipe(map((payload) => BillSummaryActions.submitDataSuccess({ payload }))),
       ),
@@ -44,11 +45,23 @@ export class BillSummaryEffects {
     ),
   );
 
+  updateBillItems$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BillSummaryActions.updateData),
+      switchMap((action) =>
+        this.db.UpdateBillSummary(action.payload).pipe(
+          map((payload) => BillSummaryActions.updateDataSuccess({ payload })),
+          catchError((error) => of(BillSummaryActions.updateDataFailure({ error: (error as Error).message }))),
+        ),
+      ),
+    ),
+  );
+
   deleteBillSummaryItem$ = createEffect(() =>
     this.actions$.pipe(
       ofType(BillSummaryActions.deleteItem),
       switchMap((action) =>
-        this.mock.DeleteItem(action.payload).pipe(
+        this.db.DeleteItem(action.payload).pipe(
           map((payload) => BillSummaryActions.deleteItemSuccess({ payload })),
           catchError((error) => of(BillSummaryActions.deleteItemFailure({ error: (error as Error).message }))),
         ),

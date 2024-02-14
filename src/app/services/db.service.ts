@@ -2,7 +2,14 @@ import { Injectable } from '@angular/core';
 import { BillSummary, ISubmitRequest } from 'src/app/interfaces/BillSummary';
 import { Observable, from, map } from 'rxjs';
 import { AccountSummary } from '../interfaces';
-import { AccountSummaryMongo, BillSummaryMongo, MongoService } from './service.interface';
+import {
+  AccountSummaryMongo,
+  AddBillItemMongo,
+  BillSummaryMongo,
+  DeleteBillItemMongo,
+  MongoService,
+  UpdateBillItemsMongo,
+} from './service.interface';
 import { mongo } from 'src/main';
 
 @Injectable({
@@ -10,17 +17,21 @@ import { mongo } from 'src/main';
 })
 export class DbService implements MongoService {
   constructor() {}
+  UpdateBillSummary(payload: ISubmitRequest[]): Observable<UpdateBillItemsMongo[]> {
+    const input = payload.map((item) => item.bills).flat();
+    return from(this.UpdateBillItems(input)) as unknown as Observable<UpdateBillItemsMongo[]>;
+  }
 
   DeleteCategory(payload: string): Observable<BillSummary[]> {
     throw new Error('Not Implemented');
   }
 
-  DeleteItem(payload: BillSummary): Observable<BillSummary[]> {
-    throw new Error('Not Implemented');
+  DeleteItem(payload: BillSummary): Observable<DeleteBillItemMongo> {
+    return from(this.DeleteBillItem([payload])) as unknown as Observable<DeleteBillItemMongo>;
   }
 
-  SubmitBillSummary(payload: ISubmitRequest[]): Observable<BillSummary[]> {
-    throw new Error('Not Implemented');
+  SubmitBillSummary(payload: ISubmitRequest[]): Observable<AddBillItemMongo> {
+    return from(this.AddBillSummaryItem(payload[0].bills)) as unknown as Observable<AddBillItemMongo>;
   }
 
   GetAccountSummary(): Observable<AccountSummary[]> {
@@ -40,6 +51,15 @@ export class DbService implements MongoService {
       out.push(value);
     });
     return out;
+  }
+  private async UpdateBillItems(item: BillSummary[]) {
+    return await mongo?.callFunction('UpdateBillItems', item);
+  }
+  private async DeleteBillItem(item: BillSummary[]) {
+    return await mongo?.callFunction('DeleteBillItem', item);
+  }
+  private async AddBillSummaryItem(item: BillSummary[]) {
+    return await mongo?.callFunction('AddBillItem', item);
   }
   private async FetchBillSummary() {
     return await mongo?.callFunction('GetBillSummary');

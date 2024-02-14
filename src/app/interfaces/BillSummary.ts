@@ -4,6 +4,7 @@ export interface BillSummary {
   name: string;
   value: number;
   category: string;
+  updatedTms: Date;
   clicked: boolean;
   edittedValue: number | null;
 }

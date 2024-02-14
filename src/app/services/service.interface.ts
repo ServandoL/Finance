@@ -2,11 +2,13 @@ import { Observable } from 'rxjs';
 import { AccountSummary, BillSummary, ISubmitRequest } from '../interfaces';
 
 export interface MongoService {
-  DeleteCategory(payload: string): Observable<BillSummary[]>;
+  DeleteCategory(payload: string): void;
 
-  DeleteItem(payload: BillSummary): Observable<BillSummary[]>;
+  DeleteItem(payload: BillSummary): Observable<DeleteBillItemMongo>;
 
-  SubmitBillSummary(payload: ISubmitRequest[]): Observable<BillSummary[]>;
+  SubmitBillSummary(payload: ISubmitRequest[]): Observable<AddBillItemMongo>;
+
+  UpdateBillSummary(payload: ISubmitRequest[]): Observable<UpdateBillItemsMongo[]>;
 
   GetAccountSummary(): Observable<AccountSummary[]>;
 
@@ -20,4 +22,17 @@ export interface BillSummaryMongo {
 export interface AccountSummaryMongo {
   monthly: AccountSummary;
   accountTotal: AccountSummary;
+}
+
+export interface AddBillItemMongo {
+  insertedId: unknown;
+}
+
+export interface DeleteBillItemMongo {
+  deletedCount: number;
+}
+
+export interface UpdateBillItemsMongo {
+  matchedCount: number;
+  modifiedCount: number;
 }

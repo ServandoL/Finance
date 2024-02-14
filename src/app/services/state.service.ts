@@ -20,6 +20,9 @@ export class StateService {
   SubmitBillSummary(payload: ISubmitRequest[]): void {
     this.store.dispatch(BillSummaryActions.submitData({ payload }));
   }
+  UpdateBillItems(payload: ISubmitRequest[]): void {
+    this.store.dispatch(BillSummaryActions.updateData({ payload }));
+  }
   DeleteBillSummaryItem(payload: BillSummary): void {
     this.store.dispatch(BillSummaryActions.deleteItem({ payload }));
   }

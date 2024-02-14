@@ -183,18 +183,17 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
         take(1),
         map((bills) => {
           const cat = this._categoryToAdd.value;
-          const toUpdate: BillSummary[] = bills.get(cat) ?? [];
           const update: BillSummary = {
             name: this.form.description.value,
             value: this.form.value.value,
             category: cat,
+            updatedTms: new Date(),
             clicked: false,
             edittedValue: null,
           };
-          toUpdate.push(update);
           const request: ISubmitRequest = {
             category: cat,
-            bills: toUpdate,
+            bills: [update],
           };
           this.service.SubmitBillSummary([request]);
         }),
@@ -249,15 +248,20 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
       .pipe(
         take(1),
         map((bills) => {
-          const request: ISubmitRequest[] = [];
+          const request: ISubmitRequest = {
+            category: '',
+            bills: [],
+          };
           bills.forEach((value, key) => {
-            const out: ISubmitRequest = {
-              category: key,
-              bills: [...value],
-            };
-            request.push(out);
+            const editted = value
+              .filter((item) => item.edittedValue !== null)
+              .map((item) => ({
+                ...item,
+                value: item.edittedValue ?? 0,
+              }));
+            request.bills.push(...editted);
           });
-          this.service.SubmitBillSummary(request);
+          this.service.UpdateBillItems([request]);
         }),
       )
       .subscribe();

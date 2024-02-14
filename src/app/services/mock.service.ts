@@ -3,7 +3,7 @@ import { BillSummary, ISubmitRequest } from 'src/app/interfaces/BillSummary';
 import { faker } from '@faker-js/faker';
 import { Observable, delay, of } from 'rxjs';
 import { AccountSummary } from '../interfaces';
-import { MongoService } from './service.interface';
+import { AddBillItemMongo, DeleteBillItemMongo, MongoService, UpdateBillItemsMongo } from './service.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -16,14 +16,19 @@ export class MockServiceService implements MongoService {
     return this.GetBillSummary();
   }
 
-  DeleteItem(payload: BillSummary): Observable<BillSummary[]> {
+  DeleteItem(payload: BillSummary): Observable<DeleteBillItemMongo> {
     console.log('deleted', payload);
-    return this.GetBillSummary();
+    return of({ deletedCount: 1 });
   }
 
-  SubmitBillSummary(payload: ISubmitRequest[]): Observable<BillSummary[]> {
+  SubmitBillSummary(payload: ISubmitRequest[]): Observable<AddBillItemMongo> {
     console.log('Submitted', payload);
-    return this.GetBillSummary();
+    return of({ insertedId: '' });
+  }
+
+  UpdateBillSummary(payload: ISubmitRequest[]): Observable<UpdateBillItemsMongo[]> {
+    console.log(payload);
+    return of([]);
   }
 
   GetAccountSummary(): Observable<AccountSummary[]> {
@@ -65,6 +70,7 @@ export class MockServiceService implements MongoService {
       name: faker.commerce.productName(),
       value: +faker.finance.amount({ min: 100, max: 500, dec: 2 }),
       category,
+      updatedTms: faker.date.anytime(),
       clicked: false,
       edittedValue: null,
     };
