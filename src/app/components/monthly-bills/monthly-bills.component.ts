@@ -272,7 +272,7 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
         updatedTms: new Date(),
       };
       this.service.AddNewCategory(input);
-      this.closeNewCategoryModal();
+      this.cancelModal();
     }
   }
 
