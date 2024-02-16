@@ -30,6 +30,9 @@ export class StateService {
     this.store.dispatch(BillSummaryActions.deleteCategory({ payload }));
   }
 
+  UpdateAccountSummaryTotal(payload: number) {
+    this.store.dispatch(AccountSummaryActions.updateAccountTotal({ payload }));
+  }
   GetAccountSummary(): void {
     this.store.dispatch(AccountSummaryActions.getData());
   }

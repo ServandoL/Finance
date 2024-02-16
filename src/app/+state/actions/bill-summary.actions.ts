@@ -1,6 +1,6 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { BillSummary, ISubmitRequest } from 'src/app/interfaces/BillSummary';
-import { AddBillItemMongo, DeleteBillItemMongo, UpdateBillItemsMongo } from 'src/app/services/service.interface';
+import { AddBillItemMongo, DeleteBillItemMongo, UpdateItemMongo } from 'src/app/services/service.interface';
 
 export const BillSummaryActions = createActionGroup({
   source: 'Bill Summary Page',
@@ -18,7 +18,7 @@ export const BillSummaryActions = createActionGroup({
     'Submit Data Success': props<{ payload: AddBillItemMongo }>(),
     'Submit Data Failure': props<{ error: string }>(),
     'Update Data': props<{ payload: ISubmitRequest[] }>(),
-    'Update Data Success': props<{ payload: UpdateBillItemsMongo[] }>(),
+    'Update Data Success': props<{ payload: UpdateItemMongo[] }>(),
     'Update Data Failure': props<{ error: string }>(),
     'Delete Item': props<{ payload: BillSummary }>(),
     'Delete Item Success': props<{ payload: DeleteBillItemMongo }>(),

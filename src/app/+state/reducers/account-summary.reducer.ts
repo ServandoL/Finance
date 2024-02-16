@@ -16,10 +16,24 @@ export const accountSummaryFeature = createFeature({
   name: 'accountSummary',
   reducer: createReducer(
     initialState,
-    on(AccountSummaryActions.getData, (state) => {
+    on(AccountSummaryActions.getData, AccountSummaryActions.updateAccountTotalSuccess, (state) => {
       return {
         ...state,
         isLoading: true,
+      };
+    }),
+    on(AccountSummaryActions.updateAccountTotal, (state) => {
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }),
+    on(AccountSummaryActions.updateAccountTotalFailure, (state, action) => {
+      return {
+        ...state,
+        isLoading: false,
+        summary: [],
+        error: action.error,
       };
     }),
     on(AccountSummaryActions.getDataSuccess, (state, action) => {

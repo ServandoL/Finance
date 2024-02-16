@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BillSummary, ISubmitRequest } from 'src/app/interfaces/BillSummary';
 import { Observable, from, map } from 'rxjs';
-import { AccountSummary } from '../interfaces';
+import { AccountSummary, UpdateAccountSummaryRequest } from '../interfaces';
 import {
   AccountSummaryMongo,
   AddBillItemMongo,
   BillSummaryMongo,
   DeleteBillItemMongo,
   MongoService,
-  UpdateBillItemsMongo,
+  UpdateItemMongo,
 } from './service.interface';
 import { mongo } from 'src/main';
 
@@ -17,9 +17,12 @@ import { mongo } from 'src/main';
 })
 export class DbService implements MongoService {
   constructor() {}
-  UpdateBillSummary(payload: ISubmitRequest[]): Observable<UpdateBillItemsMongo[]> {
+  UpdateAccountTotal(payload: UpdateAccountSummaryRequest): Observable<UpdateItemMongo> {
+    return from(this.UpdateAccountSummaryTotal(payload)) as unknown as Observable<UpdateItemMongo>;
+  }
+  UpdateBillSummary(payload: ISubmitRequest[]): Observable<UpdateItemMongo[]> {
     const input = payload.map((item) => item.bills).flat();
-    return from(this.UpdateBillItems(input)) as unknown as Observable<UpdateBillItemsMongo[]>;
+    return from(this.UpdateBillItems(input)) as unknown as Observable<UpdateItemMongo[]>;
   }
 
   DeleteCategory(payload: string): Observable<BillSummary[]> {
@@ -51,6 +54,9 @@ export class DbService implements MongoService {
       out.push(value);
     });
     return out;
+  }
+  private async UpdateAccountSummaryTotal(item: UpdateAccountSummaryRequest) {
+    return await mongo?.callFunction('UpdateAccountTotal', item);
   }
   private async UpdateBillItems(item: BillSummary[]) {
     return await mongo?.callFunction('UpdateBillItems', item);

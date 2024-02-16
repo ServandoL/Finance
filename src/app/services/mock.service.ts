@@ -2,14 +2,18 @@ import { Injectable } from '@angular/core';
 import { BillSummary, ISubmitRequest } from 'src/app/interfaces/BillSummary';
 import { faker } from '@faker-js/faker';
 import { Observable, delay, of } from 'rxjs';
-import { AccountSummary } from '../interfaces';
-import { AddBillItemMongo, DeleteBillItemMongo, MongoService, UpdateBillItemsMongo } from './service.interface';
+import { AccountSummary, UpdateAccountSummaryRequest } from '../interfaces';
+import { AddBillItemMongo, DeleteBillItemMongo, MongoService, UpdateItemMongo } from './service.interface';
+import { BSON } from 'realm-web';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MockServiceService implements MongoService {
   constructor() {}
+  UpdateAccountTotal(payload: UpdateAccountSummaryRequest): Observable<UpdateItemMongo> {
+    throw new Error('Method not implemented.');
+  }
 
   DeleteCategory(payload: string) {
     console.log('deleted category', payload);
@@ -26,18 +30,20 @@ export class MockServiceService implements MongoService {
     return of({ insertedId: '' });
   }
 
-  UpdateBillSummary(payload: ISubmitRequest[]): Observable<UpdateBillItemsMongo[]> {
+  UpdateBillSummary(payload: ISubmitRequest[]): Observable<UpdateItemMongo[]> {
     console.log(payload);
     return of([]);
   }
 
   GetAccountSummary(): Observable<AccountSummary[]> {
     const total: AccountSummary = {
+      _id: new BSON.ObjectId(),
       total: +faker.finance.amount({ min: 6000, max: 20000, dec: 2 }),
       type: 'Account Total',
       updatedTms: faker.date.anytime(),
     };
     const monthly: AccountSummary = {
+      _id: new BSON.ObjectId(),
       total: +faker.finance.amount({ min: 1000, max: 3000, dec: 2 }),
       type: 'Monthly Bill',
       updatedTms: faker.date.anytime(),

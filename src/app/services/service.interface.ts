@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { AccountSummary, BillSummary, ISubmitRequest } from '../interfaces';
+import { AccountSummary, BillSummary, ISubmitRequest, UpdateAccountSummaryRequest } from '../interfaces';
 
 export interface MongoService {
   DeleteCategory(payload: string): void;
@@ -8,11 +8,13 @@ export interface MongoService {
 
   SubmitBillSummary(payload: ISubmitRequest[]): Observable<AddBillItemMongo>;
 
-  UpdateBillSummary(payload: ISubmitRequest[]): Observable<UpdateBillItemsMongo[]>;
+  UpdateBillSummary(payload: ISubmitRequest[]): Observable<UpdateItemMongo[]>;
 
   GetAccountSummary(): Observable<AccountSummary[]>;
 
   GetBillSummary(): Observable<BillSummary[]>;
+
+  UpdateAccountTotal(payload: UpdateAccountSummaryRequest): Observable<UpdateItemMongo>;
 }
 
 export interface BillSummaryMongo {
@@ -32,7 +34,7 @@ export interface DeleteBillItemMongo {
   deletedCount: number;
 }
 
-export interface UpdateBillItemsMongo {
+export interface UpdateItemMongo {
   matchedCount: number;
   modifiedCount: number;
 }
