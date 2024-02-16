@@ -3,6 +3,7 @@ import { BillSummary, ISubmitRequest } from 'src/app/interfaces/BillSummary';
 import {
   AddBillItemMongo,
   DeleteBillItemMongo,
+  MongoDelete,
   NewCategoryRequest,
   UpdateItemMongo,
 } from 'src/app/services/service.interface';
@@ -29,7 +30,7 @@ export const BillSummaryActions = createActionGroup({
     'Delete Item Success': props<{ payload: DeleteBillItemMongo }>(),
     'Delete Item Failure': props<{ error: string }>(),
     'Delete Category': props<{ payload: string }>(),
-    'Delete Category Success': props<{ payload: BillSummary[] }>(),
+    'Delete Category Success': props<{ payload: MongoDelete }>(),
     'Delete Category Failure': props<{ error: string }>(),
     'Add Category': props<{ payload: NewCategoryRequest }>(),
     'Add Category Success': props<{ payload: AddBillItemMongo }>(),

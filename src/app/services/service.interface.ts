@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { AccountSummary, BillSummary, ISubmitRequest, UpdateAccountSummaryRequest } from '../interfaces';
 
 export interface MongoService {
-  DeleteCategory(payload: string): void;
+  DeleteCategory(payload: string): Observable<MongoDelete>;
 
   DeleteItem(payload: BillSummary): Observable<DeleteBillItemMongo>;
 
@@ -46,4 +46,9 @@ export interface NewCategoryRequest {
   value: number;
   category: string;
   updatedTms: Date;
+}
+
+export interface MongoDelete {
+  acknowledged: boolean;
+  deletedCount: number;
 }

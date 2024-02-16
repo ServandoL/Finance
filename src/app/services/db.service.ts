@@ -7,6 +7,7 @@ import {
   AddBillItemMongo,
   BillSummaryMongo,
   DeleteBillItemMongo,
+  MongoDelete,
   MongoService,
   NewCategoryRequest,
   UpdateItemMongo,
@@ -29,8 +30,8 @@ export class DbService implements MongoService {
     return from(this.UpdateBillItems(input)) as unknown as Observable<UpdateItemMongo[]>;
   }
 
-  DeleteCategory(payload: string): Observable<BillSummary[]> {
-    throw new Error('Not Implemented');
+  DeleteCategory(payload: string): Observable<MongoDelete> {
+    return from(this.DeleteCategoryItem(payload)) as unknown as Observable<MongoDelete>;
   }
 
   DeleteItem(payload: BillSummary): Observable<DeleteBillItemMongo> {
@@ -79,5 +80,8 @@ export class DbService implements MongoService {
   }
   private async AddNewCategoryItem(item: NewCategoryRequest) {
     return await mongo?.callFunction('AddCategory', item);
+  }
+  private async DeleteCategoryItem(item: string) {
+    return await mongo?.callFunction('DeleteCategory', item);
   }
 }

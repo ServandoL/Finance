@@ -6,6 +6,7 @@ import { AccountSummary, UpdateAccountSummaryRequest } from '../interfaces';
 import {
   AddBillItemMongo,
   DeleteBillItemMongo,
+  MongoDelete,
   MongoService,
   NewCategoryRequest,
   UpdateItemMongo,
@@ -24,9 +25,9 @@ export class MockServiceService implements MongoService {
     throw new Error('Method not implemented.');
   }
 
-  DeleteCategory(payload: string) {
+  DeleteCategory(payload: string): Observable<MongoDelete> {
     console.log('deleted category', payload);
-    return this.GetBillSummary();
+    throw new Error('Method not implemented.');
   }
 
   DeleteItem(payload: BillSummary): Observable<DeleteBillItemMongo> {
