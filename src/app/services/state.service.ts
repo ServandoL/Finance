@@ -4,6 +4,7 @@ import { BillSummaryActions } from '../+state/actions/bill-summary.actions';
 import { AppState } from '../+state';
 import { AccountSummaryActions } from '../+state/actions/account-summary.actions';
 import { BillSummary, ISubmitRequest } from '../interfaces';
+import { NewCategoryRequest } from './service.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -28,6 +29,9 @@ export class StateService {
   }
   DeleteBillSummaryCategory(payload: string): void {
     this.store.dispatch(BillSummaryActions.deleteCategory({ payload }));
+  }
+  AddNewCategory(payload: NewCategoryRequest) {
+    this.store.dispatch(BillSummaryActions.addCategory({ payload }));
   }
 
   UpdateAccountSummaryTotal(payload: number) {

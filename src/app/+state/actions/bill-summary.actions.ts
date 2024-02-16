@@ -1,6 +1,11 @@
 import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { BillSummary, ISubmitRequest } from 'src/app/interfaces/BillSummary';
-import { AddBillItemMongo, DeleteBillItemMongo, UpdateItemMongo } from 'src/app/services/service.interface';
+import {
+  AddBillItemMongo,
+  DeleteBillItemMongo,
+  NewCategoryRequest,
+  UpdateItemMongo,
+} from 'src/app/services/service.interface';
 
 export const BillSummaryActions = createActionGroup({
   source: 'Bill Summary Page',
@@ -26,5 +31,8 @@ export const BillSummaryActions = createActionGroup({
     'Delete Category': props<{ payload: string }>(),
     'Delete Category Success': props<{ payload: BillSummary[] }>(),
     'Delete Category Failure': props<{ error: string }>(),
+    'Add Category': props<{ payload: NewCategoryRequest }>(),
+    'Add Category Success': props<{ payload: AddBillItemMongo }>(),
+    'Add Category Failure': props<{ error: string }>(),
   },
 });

@@ -7,6 +7,19 @@
   }
 }
 
+ion-content {
+  position: relative;
+  div#list-container .list-item:last-child {
+    margin-bottom: 100px;
+  }
+}
+
 ion-input.update-item {
   color: green;
+}
+
+.fixed-button {
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
 }

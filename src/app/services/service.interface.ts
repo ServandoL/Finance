@@ -15,6 +15,8 @@ export interface MongoService {
   GetBillSummary(): Observable<BillSummary[]>;
 
   UpdateAccountTotal(payload: UpdateAccountSummaryRequest): Observable<UpdateItemMongo>;
+
+  AddNewCategory(payload: NewCategoryRequest): Observable<AddBillItemMongo>;
 }
 
 export interface BillSummaryMongo {
@@ -37,4 +39,11 @@ export interface DeleteBillItemMongo {
 export interface UpdateItemMongo {
   matchedCount: number;
   modifiedCount: number;
+}
+
+export interface NewCategoryRequest {
+  name: string;
+  value: number;
+  category: string;
+  updatedTms: Date;
 }

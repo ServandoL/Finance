@@ -23,6 +23,7 @@ export class BillSummaryEffects {
         BillSummaryActions.deleteItemSuccess,
         BillSummaryActions.deleteCategorySuccess,
         BillSummaryActions.updateDataSuccess,
+        BillSummaryActions.addCategorySuccess,
       ),
       switchMap(() =>
         this.db.GetBillSummary().pipe(
@@ -76,6 +77,18 @@ export class BillSummaryEffects {
         this.mock.DeleteCategory(action.payload).pipe(
           map((payload) => BillSummaryActions.deleteCategorySuccess({ payload })),
           catchError((error) => of(BillSummaryActions.deleteCategoryFailure({ error: (error as Error).message }))),
+        ),
+      ),
+    ),
+  );
+
+  addNewCategory = createEffect(() =>
+    this.actions$.pipe(
+      ofType(BillSummaryActions.addCategory),
+      switchMap((action) =>
+        this.db.AddNewCategory(action.payload).pipe(
+          map((payload) => BillSummaryActions.addCategorySuccess({ payload })),
+          catchError((error) => of(BillSummaryActions.addCategoryFailure({ error: (error as Error).message }))),
         ),
       ),
     ),

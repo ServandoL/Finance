@@ -25,12 +25,14 @@ import {
   IonItemOptions,
   IonItemOption,
   IonActionSheet,
+  IonAlert,
 } from '@ionic/angular/standalone';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, Observable, Subscription, map, take } from 'rxjs';
 import { AppState } from 'src/app/+state';
 import { selectBills, selectIsLoading } from 'src/app/+state/reducers/bill-summary.reducer';
 import {
+  AddCategoryForm,
   BillSummary,
   ButtonActionType,
   DeleteAction,
@@ -42,6 +44,7 @@ import { StateService } from 'src/app/services/state.service';
 import * as IonicIcons from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NewCategoryRequest } from 'src/app/services/service.interface';
 
 @Component({
   selector: 'app-monthly-bills',
@@ -49,6 +52,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
   styleUrls: ['./monthly-bills.component.scss'],
   standalone: true,
   imports: [
+    IonAlert,
     IonActionSheet,
     IonItemOption,
     IonItemOptions,
@@ -85,8 +89,11 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
   bills$: Observable<Map<string, BillSummary[]>>;
   isLoading$: Observable<boolean>;
   updateForm: FormGroup<UpdateItemForm>;
+  _categoryForm: FormGroup<AddCategoryForm>;
+  _toggleAlert = new BehaviorSubject<boolean>(false);
   _categories = new BehaviorSubject<ICategory[]>([]);
   _toggleModal = new BehaviorSubject<boolean>(false);
+  _toggleCategoryModal = new BehaviorSubject<boolean>(false);
   _categoryToAdd = new BehaviorSubject<string>('');
   _loadingMessage = new BehaviorSubject<string>(this.FETCH_MESSAGE);
   _toggleActionSheet = new BehaviorSubject<boolean>(false);
@@ -120,6 +127,11 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
       description: ['', Validators.required],
       value: [0, Validators.required],
     });
+    this._categoryForm = this.fb.nonNullable.group({
+      name: ['', Validators.required],
+      value: [0, Validators.required],
+      category: ['', Validators.required],
+    });
   }
 
   get loadingMessage$(): Observable<string> {
@@ -134,6 +146,10 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
     return this._toggleModal.asObservable();
   }
 
+  get toggleCategoryModal$(): Observable<boolean> {
+    return this._toggleCategoryModal.asObservable();
+  }
+
   get categoryToAdd$(): Observable<string> {
     return this._categoryToAdd.asObservable();
   }
@@ -142,8 +158,16 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
     return this.updateForm.controls;
   }
 
+  get categoryForm(): AddCategoryForm {
+    return this._categoryForm.controls;
+  }
+
   get toggleActionSheet$(): Observable<boolean> {
     return this._toggleActionSheet.asObservable();
+  }
+
+  get toggleAlert$(): Observable<boolean> {
+    return this._toggleAlert.asObservable();
   }
 
   ionViewWillEnter(): void {
@@ -206,17 +230,50 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
     this._toggleModal.next(true);
   }
 
+  openNewCategoryModal() {
+    this._toggleCategoryModal.next(true);
+  }
+
+  closeNewCategoryModal() {
+    this._toggleCategoryModal.next(false);
+  }
+
   cancelModal() {
     this.modal?.dismiss(null, 'cancel');
     this.updateForm.reset();
+    this._categoryForm.reset();
     this._toggleModal.next(false);
+    this._toggleCategoryModal.next(false);
   }
 
   confirmModal() {
-    this._loadingMessage.next(this.PROCESS_MESSAGE);
-    this.handleAddItem();
-    this.updateForm.reset();
-    this._toggleModal.next(false);
+    if (!this.updateForm.valid) {
+      this._toggleAlert.next(true);
+    } else {
+      this._loadingMessage.next(this.PROCESS_MESSAGE);
+      this.handleAddItem();
+      this.updateForm.reset();
+      this._toggleModal.next(false);
+    }
+  }
+
+  dismissAlert() {
+    this._toggleAlert.next(false);
+  }
+
+  confirmNewCategory() {
+    if (!this._categoryForm.valid) {
+      this._toggleAlert.next(true);
+    } else {
+      const input: NewCategoryRequest = {
+        name: this.categoryForm.name.value,
+        value: this.categoryForm.value.value,
+        category: this.categoryForm.category.value,
+        updatedTms: new Date(),
+      };
+      this.service.AddNewCategory(input);
+      this.closeNewCategoryModal();
+    }
   }
 
   handleDeleteCategory(category: string) {
@@ -233,7 +290,7 @@ export class MonthlyBillsComponent implements ViewWillEnter, ViewWillLeave {
         this.service.DeleteBillSummaryCategory(this._categoryToDelete.value);
         break;
       default:
-        throw new Error(`${action} is not supported yet.`);
+        console.log(action);
     }
   }
 

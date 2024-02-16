@@ -30,6 +30,12 @@ export interface UpdateItemForm {
   value: FormControl<number>;
 }
 
+export interface AddCategoryForm {
+  name: FormControl<string>;
+  value: FormControl<number>;
+  category: FormControl<string>;
+}
+
 export interface DeleteAction {
   detail: { data: { action: ButtonActionType } };
   role: 'cancel' | 'destructive' | 'selected' | string;

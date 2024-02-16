@@ -3,7 +3,13 @@ import { BillSummary, ISubmitRequest } from 'src/app/interfaces/BillSummary';
 import { faker } from '@faker-js/faker';
 import { Observable, delay, of } from 'rxjs';
 import { AccountSummary, UpdateAccountSummaryRequest } from '../interfaces';
-import { AddBillItemMongo, DeleteBillItemMongo, MongoService, UpdateItemMongo } from './service.interface';
+import {
+  AddBillItemMongo,
+  DeleteBillItemMongo,
+  MongoService,
+  NewCategoryRequest,
+  UpdateItemMongo,
+} from './service.interface';
 import { BSON } from 'realm-web';
 
 @Injectable({
@@ -11,6 +17,9 @@ import { BSON } from 'realm-web';
 })
 export class MockServiceService implements MongoService {
   constructor() {}
+  AddNewCategory(payload: NewCategoryRequest): Observable<AddBillItemMongo> {
+    throw new Error('Method not implemented.');
+  }
   UpdateAccountTotal(payload: UpdateAccountSummaryRequest): Observable<UpdateItemMongo> {
     throw new Error('Method not implemented.');
   }

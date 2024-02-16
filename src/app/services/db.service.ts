@@ -8,6 +8,7 @@ import {
   BillSummaryMongo,
   DeleteBillItemMongo,
   MongoService,
+  NewCategoryRequest,
   UpdateItemMongo,
 } from './service.interface';
 import { mongo } from 'src/main';
@@ -17,6 +18,9 @@ import { mongo } from 'src/main';
 })
 export class DbService implements MongoService {
   constructor() {}
+  AddNewCategory(payload: NewCategoryRequest): Observable<AddBillItemMongo> {
+    return from(this.AddNewCategoryItem(payload)) as unknown as Observable<AddBillItemMongo>;
+  }
   UpdateAccountTotal(payload: UpdateAccountSummaryRequest): Observable<UpdateItemMongo> {
     return from(this.UpdateAccountSummaryTotal(payload)) as unknown as Observable<UpdateItemMongo>;
   }
@@ -72,5 +76,8 @@ export class DbService implements MongoService {
   }
   private async FetchAccountSummary() {
     return await mongo?.callFunction('GetAccountSummary');
+  }
+  private async AddNewCategoryItem(item: NewCategoryRequest) {
+    return await mongo?.callFunction('AddCategory', item);
   }
 }
